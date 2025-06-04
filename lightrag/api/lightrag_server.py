@@ -85,6 +85,7 @@ def create_app(args):
         "openai",
         "openai-ollama",
         "azure_openai",
+        "bedrock"
     ]:
         raise Exception("llm binding not supported")
 
