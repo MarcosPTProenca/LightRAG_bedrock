@@ -96,16 +96,21 @@ async def bedrock_complete_if_cache(
 async def bedrock_complete(
     prompt, system_prompt=None, history_messages=[], keyword_extraction=False, **kwargs
 ) -> str:
+    """
+    Complete the prompt using Amazon Bedrock.
+    Replacement for lightrag.llm.bedrock.bedrock_complete to use any Bedrock model.
+    """
     keyword_extraction = kwargs.pop("keyword_extraction", None)
-    model_name = kwargs["hashing_kv"].global_config["llm_model_name"]
+    llm_model_name = kwargs["hashing_kv"].global_config["llm_model_name"]
+    kwargs.pop("stream", None)  # Bedrock doesn't support 'stream' kwarg
     result = await bedrock_complete_if_cache(
-        model_name,
+        llm_model_name,
         prompt,
         system_prompt=system_prompt,
         history_messages=history_messages,
         **kwargs,
     )
-    if keyword_extraction:  # TODO: use JSON API
+    if keyword_extraction:
         return locate_json_string_body_from_string(result)
     return result
 
