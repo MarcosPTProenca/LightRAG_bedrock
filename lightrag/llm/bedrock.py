@@ -43,7 +43,7 @@ async def bedrock_complete_if_cache(
     # aws_access_key_id=None,
     # aws_secret_access_key=None,
     # aws_session_token=None,
-    # aws_region=None,
+    aws_region=None,
     **kwargs,
 ) -> str:
     # os.environ["AWS_ACCESS_KEY_ID"] = os.environ.get(
@@ -55,9 +55,9 @@ async def bedrock_complete_if_cache(
     # os.environ["AWS_SESSION_TOKEN"] = os.environ.get(
     #     "AWS_SESSION_TOKEN", aws_session_token
     # )
-    # os.environ["AWS_REGION"] = os.environ.get(
-    #     "AWS_REGION", aws_region
-    # )
+    os.environ["AWS_REGION"] = os.environ.get(
+        "AWS_REGION", aws_region
+    )
 
     model = model or os.environ.get("AWS_LLM_MODEL_NAME", "amazon.nova-lite-v1:0")
 
@@ -147,7 +147,7 @@ async def bedrock_embed(
     # aws_access_key_id=None,
     # aws_secret_access_key=None,
     # aws_session_token=None,
-    # aws_region=None,
+    aws_region=None,
 ) -> np.ndarray:
     
     # Obter o nome do modelo de embedding da variável de ambiente ou usar o padrão
@@ -162,9 +162,9 @@ async def bedrock_embed(
     # os.environ["AWS_SESSION_TOKEN"] = os.environ.get(
     #     "AWS_SESSION_TOKEN", aws_session_token
     # )
-    # os.environ["AWS_REGION"] = os.environ.get(
-    #     "AWS_REGION", aws_region
-    # )
+    os.environ["AWS_REGION"] = os.environ.get(
+        "AWS_REGION", aws_region
+    )
 
     session = aioboto3.Session()
     async with session.client("bedrock-runtime") as bedrock_async_client:
