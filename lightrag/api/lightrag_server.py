@@ -9,9 +9,6 @@ import logging
 import logging.config
 import uvicorn
 import pipmaster as pm
-if not pm.is_installed("boto3"):
-    pm.install("boto3")
-import boto3
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 from pathlib import Path
