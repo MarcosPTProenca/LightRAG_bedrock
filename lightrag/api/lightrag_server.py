@@ -341,6 +341,30 @@ def create_app(args):
             max_parallel_insert=args.max_parallel_insert,
             addon_params={"language": args.summary_language},
         )
+    elif args.llm_binding == "bedrock":
+        rag = LightRAG(
+            working_dir=args.working_dir,
+            llm_model_func=bedrock_complete_if_cache,
+            chunk_token_size=int(args.chunk_size),
+            chunk_overlap_token_size=int(args.chunk_overlap_size),
+            llm_model_kwargs={},
+            llm_model_name=args.llm_model,
+            llm_model_max_async=args.max_async,
+            llm_model_max_token_size=args.max_tokens,
+            embedding_func=embedding_func,
+            kv_storage=args.kv_storage,
+            graph_storage=args.graph_storage,
+            vector_storage=args.vector_storage,
+            doc_status_storage=args.doc_status_storage,
+            vector_db_storage_cls_kwargs={
+                "cosine_better_than_threshold": args.cosine_threshold
+            },
+            enable_llm_cache_for_entity_extract=args.enable_llm_cache_for_extract,
+            enable_llm_cache=args.enable_llm_cache,
+            auto_manage_storages_states=False,
+            max_parallel_insert=args.max_parallel_insert,
+            addon_params={"language": args.summary_language},
+        )
     else:  # azure_openai
         rag = LightRAG(
             working_dir=args.working_dir,
