@@ -9,6 +9,9 @@ import logging
 import logging.config
 import uvicorn
 import pipmaster as pm
+if not pm.is_installed("boto3"):
+    pm.install("boto3")
+import boto3
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 from pathlib import Path
@@ -113,13 +116,9 @@ def create_app(args):
 
     if args.llm_binding == "bedrock" or args.embedding_binding == "bedrock":
         # 1) Cria sessão boto3 para obter as credenciais atuais (IAM Role, ~/.aws, etc.)
-        if not pm.is_installed("boto3"):
-            pm.install("boto3")
-        
-        import boto3
 
         session = boto3.Session()
-        creds = session.get_credentials().get_frozen_credentials()
+        creds = session.get_credentials()
         # 2) Ajusta as variáveis de ambiente permanentemente para este processo
         os.environ["AWS_ACCESS_KEY_ID"] = creds.access_key
         os.environ["AWS_SECRET_ACCESS_KEY"] = creds.secret_key
