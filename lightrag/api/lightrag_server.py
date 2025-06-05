@@ -114,17 +114,6 @@ def create_app(args):
         else:
             args.embedding_binding_host = get_default_host(args.embedding_binding)
 
-    if args.llm_binding == "bedrock" or args.embedding_binding == "bedrock":
-        # 1) Cria sessão boto3 para obter as credenciais atuais (IAM Role, ~/.aws, etc.)
-
-        session = boto3.Session()
-        creds = session.get_credentials()
-        # 2) Ajusta as variáveis de ambiente permanentemente para este processo
-        os.environ["AWS_ACCESS_KEY_ID"] = creds.access_key
-        os.environ["AWS_SECRET_ACCESS_KEY"] = creds.secret_key
-        if creds.token:
-            os.environ["AWS_SESSION_TOKEN"] = creds.token
-
     # Add SSL validation
     if args.ssl:
         if not args.ssl_certfile or not args.ssl_keyfile:
