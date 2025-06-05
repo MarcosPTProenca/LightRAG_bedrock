@@ -87,6 +87,9 @@ def create_app(args):
         "azure_openai",
         "bedrock",
     ]:
+        print(f"[DEBUG] args.llm_binding = '{args.llm_binding}'")
+        print(f"[DEBUG] args.llm_binding in list? = {args.llm_binding in ['bedrock']}")
+        print(f"[DEBUG] stripped = '{args.llm_binding.strip()}'")
         raise Exception("llm binding not supported")
 
     if args.embedding_binding.strip() not in ["lollms", "ollama", "openai", "azure_openai", "bedrock"]:
