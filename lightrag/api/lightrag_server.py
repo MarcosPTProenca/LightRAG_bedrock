@@ -89,7 +89,7 @@ def create_app(args):
     ]:
         raise Exception("llm binding not supported")
 
-    if args.embedding_binding not in ["lollms", "ollama", "openai", "azure_openai"]:
+    if args.embedding_binding not in ["lollms", "ollama", "openai", "azure_openai", "bedrock"]:
         raise Exception("embedding binding not supported")
 
     # Set default hosts if not provided
@@ -213,6 +213,11 @@ def create_app(args):
     if args.llm_binding_host == "openai-ollama" or args.embedding_binding == "ollama":
         from lightrag.llm.openai import openai_complete_if_cache
         from lightrag.llm.ollama import ollama_embed
+    if args.llm_binding == "bedrock" or args.embedding_binding == "bedrock":
+        from lightrag.llm.bedrock import (
+            bedrock_complete_if_cache,
+            bedrock_embed,
+        )
 
     async def openai_alike_model_complete(
         prompt,
@@ -289,6 +294,14 @@ def create_app(args):
             model=args.embedding_model,
             base_url=args.embedding_binding_host,
             api_key=args.embedding_binding_api_key,
+        )
+        if args.embedding_binding == "openai"
+        else bedrock_embed(
+            texts,
+            model=args.embedding_model,
+            aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+            aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+            aws_session_token=os.getenv("AWS_SESSION_TOKEN"),
         ),
     )
 
@@ -300,7 +313,7 @@ def create_app(args):
             if args.llm_binding == "lollms"
             else ollama_model_complete
             if args.llm_binding == "ollama"
-            else openai_alike_model_complete,
+            else openai_alike_model_complete
             llm_model_name=args.llm_model,
             llm_model_max_async=args.max_async,
             llm_model_max_token_size=args.max_tokens,
