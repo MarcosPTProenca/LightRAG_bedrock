@@ -85,7 +85,7 @@ def create_app(args):
         "openai",
         "openai-ollama",
         "azure_openai",
-        "bedrock"
+        "bedrock",
     ]:
         raise Exception("llm binding not supported")
 
@@ -94,10 +94,16 @@ def create_app(args):
 
     # Set default hosts if not provided
     if args.llm_binding_host is None:
-        args.llm_binding_host = get_default_host(args.llm_binding)
+        if args.llm_binding == "bedrock":
+            args.llm_binding_host = "No host required for Bedrock"
+        else: 
+            args.llm_binding_host = get_default_host(args.llm_binding)
 
     if args.embedding_binding_host is None:
-        args.embedding_binding_host = get_default_host(args.embedding_binding)
+        if args.embedding_binding == "bedrock":
+            args.embedding_binding = "No host required for Bedrock"
+        else:
+            args.embedding_binding_host = get_default_host(args.embedding_binding)
 
     # Add SSL validation
     if args.ssl:
