@@ -40,24 +40,24 @@ async def bedrock_complete_if_cache(
     prompt,
     system_prompt=None,
     history_messages=[],
-    aws_access_key_id=None,
-    aws_secret_access_key=None,
-    aws_session_token=None,
-    aws_region=None,
+    # aws_access_key_id=None,
+    # aws_secret_access_key=None,
+    # aws_session_token=None,
+    # aws_region=None,
     **kwargs,
 ) -> str:
-    os.environ["AWS_ACCESS_KEY_ID"] = os.environ.get(
-        "AWS_ACCESS_KEY_ID", aws_access_key_id
-    )
-    os.environ["AWS_SECRET_ACCESS_KEY"] = os.environ.get(
-        "AWS_SECRET_ACCESS_KEY", aws_secret_access_key
-    )
-    os.environ["AWS_SESSION_TOKEN"] = os.environ.get(
-        "AWS_SESSION_TOKEN", aws_session_token
-    )
-    os.environ["AWS_REGION"] = os.environ.get(
-        "AWS_REGION", aws_region
-    )
+    # os.environ["AWS_ACCESS_KEY_ID"] = os.environ.get(
+    #     "AWS_ACCESS_KEY_ID", aws_access_key_id
+    # )
+    # os.environ["AWS_SECRET_ACCESS_KEY"] = os.environ.get(
+    #     "AWS_SECRET_ACCESS_KEY", aws_secret_access_key
+    # )
+    # os.environ["AWS_SESSION_TOKEN"] = os.environ.get(
+    #     "AWS_SESSION_TOKEN", aws_session_token
+    # )
+    # os.environ["AWS_REGION"] = os.environ.get(
+    #     "AWS_REGION", aws_region
+    # )
 
     model = model or os.environ.get("AWS_LLM_MODEL_NAME", "amazon.nova-lite-v1:0")
 
@@ -144,27 +144,27 @@ async def bedrock_complete(
 async def bedrock_embed(
     texts: list[str],
     model: str = None,
-    aws_access_key_id=None,
-    aws_secret_access_key=None,
-    aws_session_token=None,
-    aws_region=None,
+    # aws_access_key_id=None,
+    # aws_secret_access_key=None,
+    # aws_session_token=None,
+    # aws_region=None,
 ) -> np.ndarray:
     
     # Obter o nome do modelo de embedding da variável de ambiente ou usar o padrão
     model = model or os.environ.get("AWS_EMBEDDING_MODEL_NAME", "amazon.titan-embed-text-v2:0")
 
-    os.environ["AWS_ACCESS_KEY_ID"] = os.environ.get(
-        "AWS_ACCESS_KEY_ID", aws_access_key_id
-    )
-    os.environ["AWS_SECRET_ACCESS_KEY"] = os.environ.get(
-        "AWS_SECRET_ACCESS_KEY", aws_secret_access_key
-    )
-    os.environ["AWS_SESSION_TOKEN"] = os.environ.get(
-        "AWS_SESSION_TOKEN", aws_session_token
-    )
-    os.environ["AWS_REGION"] = os.environ.get(
-        "AWS_REGION", aws_region
-    )
+    # os.environ["AWS_ACCESS_KEY_ID"] = os.environ.get(
+    #     "AWS_ACCESS_KEY_ID", aws_access_key_id
+    # )
+    # os.environ["AWS_SECRET_ACCESS_KEY"] = os.environ.get(
+    #     "AWS_SECRET_ACCESS_KEY", aws_secret_access_key
+    # )
+    # os.environ["AWS_SESSION_TOKEN"] = os.environ.get(
+    #     "AWS_SESSION_TOKEN", aws_session_token
+    # )
+    # os.environ["AWS_REGION"] = os.environ.get(
+    #     "AWS_REGION", aws_region
+    # )
 
     session = aioboto3.Session()
     async with session.client("bedrock-runtime") as bedrock_async_client:
