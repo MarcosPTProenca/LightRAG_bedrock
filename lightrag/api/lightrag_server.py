@@ -344,7 +344,7 @@ def create_app(args):
             chunk_token_size=int(args.chunk_size),
             chunk_overlap_token_size=int(args.chunk_overlap_size),
             llm_model_kwargs={},
-            llm_model_name=args.llm_model,
+            # llm_model_name=args.llm_model,
             llm_model_max_async=args.max_async,
             llm_model_max_token_size=args.max_tokens,
             embedding_func=embedding_func,
