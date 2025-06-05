@@ -249,12 +249,19 @@ def parse_args() -> argparse.Namespace:
         args.llm_binding = "openai"
         args.embedding_binding = "ollama"
 
-    args.llm_binding_host = get_env_value(
+    if args.llm_binding == "bedrock":
+        args.llm_binding_host = "No host required for Bedrock" 
+    else:
+        args.llm_binding_host = get_env_value(
         "LLM_BINDING_HOST", get_default_host(args.llm_binding)
-    )
-    args.embedding_binding_host = get_env_value(
+        )
+    if args.embedding_binding == "bedrock":
+        args.embedding_binding_host = "No host required for Bedrock"   
+    else:
+        args.embedding_binding_host = get_env_value(
         "EMBEDDING_BINDING_HOST", get_default_host(args.embedding_binding)
-    )
+        )
+        
     args.llm_binding_api_key = get_env_value("LLM_BINDING_API_KEY", None)
     args.embedding_binding_api_key = get_env_value("EMBEDDING_BINDING_API_KEY", "")
 
