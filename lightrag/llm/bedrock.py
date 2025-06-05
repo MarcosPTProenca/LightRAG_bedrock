@@ -1,11 +1,17 @@
 import copy
 import os
 import json
-import botocore.exceptions
+
 import pipmaster as pm  # Pipmaster for dynamic library install
 
 if not pm.is_installed("aioboto3"):
     pm.install("aioboto3")
+
+if not pm.is_installed("aioboto3"):
+    pm.install("botocore")
+
+import botocore
+import botocore.exceptions
 import aioboto3
 import numpy as np
 from tenacity import (
