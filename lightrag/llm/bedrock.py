@@ -96,8 +96,6 @@ async def bedrock_complete_if_cache(
     session = aioboto3.Session()
     async with session.client("bedrock-runtime", region_name=aws_region) as bedrock_async_client:
         try:
-            print(f"Calling Bedrock model {model} with args: {args}", flush=True)
-            print(f"Calling Bedrock model {model} with kwargs: {kwargs}", flush=True)
             response = await bedrock_async_client.converse(**args, **kwargs)
         except Exception as e:
             raise BedrockError(e)
