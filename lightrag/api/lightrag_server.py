@@ -215,7 +215,7 @@ def create_app(args):
         from lightrag.llm.ollama import ollama_embed
     if args.llm_binding == "bedrock" or args.embedding_binding == "bedrock":
         from lightrag.llm.bedrock import (
-            bedrock_complete_if_cache,
+            bedrock_complete,
             bedrock_embed,
         )
 
@@ -298,10 +298,6 @@ def create_app(args):
         if args.embedding_binding == "openai"
         else bedrock_embed(
             texts,
-            model=args.embedding_model,
-            aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-            aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-            aws_session_token=os.getenv("AWS_SESSION_TOKEN"),
         ),
     )
 
@@ -313,7 +309,7 @@ def create_app(args):
             if args.llm_binding == "lollms"
             else ollama_model_complete
             if args.llm_binding == "ollama"
-            else openai_alike_model_complete
+            else openai_alike_model_complete,
             llm_model_name=args.llm_model,
             llm_model_max_async=args.max_async,
             llm_model_max_token_size=args.max_tokens,
@@ -344,7 +340,7 @@ def create_app(args):
     elif args.llm_binding == "bedrock":
         rag = LightRAG(
             working_dir=args.working_dir,
-            llm_model_func=bedrock_complete_if_cache,
+            llm_model_func=bedrock_complete,
             chunk_token_size=int(args.chunk_size),
             chunk_overlap_token_size=int(args.chunk_overlap_size),
             llm_model_kwargs={},

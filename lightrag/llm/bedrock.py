@@ -1,7 +1,7 @@
 import copy
 import os
 import json
-
+import botocore.exceptions
 import pipmaster as pm  # Pipmaster for dynamic library install
 
 if not pm.is_installed("aioboto3"):
@@ -116,27 +116,40 @@ async def bedrock_complete(
 
 
 # @wrap_embedding_func_with_attrs(embedding_dim=1024, max_token_size=8192)
-# @retry(
-#     stop=stop_after_attempt(3),
-#     wait=wait_exponential(multiplier=1, min=4, max=10),
-#     retry=retry_if_exception_type((RateLimitError, APIConnectionError, Timeout)),  # TODO: fix exceptions
-# )
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=1, min=4, max=10),
+    retry=retry_if_exception_type((
+        botocore.exceptions.ClientError,
+        botocore.exceptions.EndpointConnectionError,
+        botocore.exceptions.ConnectionClosedError,
+        botocore.exceptions.ReadTimeoutError,
+        botocore.exceptions.ConnectTimeoutError,
+        botocore.exceptions.BotoCoreError,
+    )),
+)
 async def bedrock_embed(
     texts: list[str],
-    model: str = "amazon.titan-embed-text-v2:0",
+    model: str = None,
     aws_access_key_id=None,
     aws_secret_access_key=None,
     aws_session_token=None,
 ) -> np.ndarray:
-    os.environ["AWS_ACCESS_KEY_ID"] = os.environ.get(
-        "AWS_ACCESS_KEY_ID", aws_access_key_id
-    )
-    os.environ["AWS_SECRET_ACCESS_KEY"] = os.environ.get(
-        "AWS_SECRET_ACCESS_KEY", aws_secret_access_key
-    )
-    os.environ["AWS_SESSION_TOKEN"] = os.environ.get(
-        "AWS_SESSION_TOKEN", aws_session_token
-    )
+    # Obter a região da variável de ambiente
+    aws_region = os.getenv("AWS_REGION")
+    if not aws_region:
+        raise ValueError("A variável de ambiente 'AWS_REGION' não está definida.")
+
+    # Obter o nome do modelo de embedding da variável de ambiente ou usar o padrão
+    model = model or os.getenv("AWS_EMBEDDING_MODEL_NAME", "amazon.titan-embed-text-v2:0")
+
+    # Configurar as credenciais da AWS, se fornecidas
+    if aws_access_key_id:
+        os.environ["AWS_ACCESS_KEY_ID"] = aws_access_key_id
+    if aws_secret_access_key:
+        os.environ["AWS_SECRET_ACCESS_KEY"] = aws_secret_access_key
+    if aws_session_token:
+        os.environ["AWS_SESSION_TOKEN"] = aws_session_token
 
     session = aioboto3.Session()
     async with session.client("bedrock-runtime") as bedrock_async_client:
