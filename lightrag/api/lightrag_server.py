@@ -113,6 +113,9 @@ def create_app(args):
 
     if args.llm_binding == "bedrock" or args.embedding_binding == "bedrock":
         # 1) Cria sessão boto3 para obter as credenciais atuais (IAM Role, ~/.aws, etc.)
+        if not pm.is_installed("boto3"):
+            pm.install("boto3")
+        
         import boto3
 
         session = boto3.Session()

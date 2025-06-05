@@ -22,4 +22,3 @@ pyuca
 tenacity
 tiktoken
 uvicorn
-botocore
