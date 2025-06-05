@@ -55,9 +55,7 @@ async def bedrock_complete_if_cache(
     # os.environ["AWS_SESSION_TOKEN"] = os.environ.get(
     #     "AWS_SESSION_TOKEN", aws_session_token
     # )
-    os.environ["AWS_REGION"] = os.environ.get(
-        "AWS_REGION", aws_region
-    )
+    aws_region = aws_region or os.environ.get("AWS_REGION", "us-east-1")
 
     model = model or os.environ.get("AWS_LLM_MODEL_NAME", "amazon.nova-lite-v1:0")
 
@@ -96,7 +94,7 @@ async def bedrock_complete_if_cache(
 
     # Call model via Converse API
     session = aioboto3.Session()
-    async with session.client("bedrock-runtime") as bedrock_async_client:
+    async with session.client("bedrock-runtime", region_name=aws_region) as bedrock_async_client:
         try:
             response = await bedrock_async_client.converse(**args, **kwargs)
         except Exception as e:
@@ -162,12 +160,10 @@ async def bedrock_embed(
     # os.environ["AWS_SESSION_TOKEN"] = os.environ.get(
     #     "AWS_SESSION_TOKEN", aws_session_token
     # )
-    os.environ["AWS_REGION"] = os.environ.get(
-        "AWS_REGION", aws_region
-    )
+    aws_region = aws_region or os.environ.get("AWS_REGION", "us-east-1")
 
     session = aioboto3.Session()
-    async with session.client("bedrock-runtime") as bedrock_async_client:
+    async with session.client("bedrock-runtime", region_name=aws_region) as bedrock_async_client:
         if (model_provider := model.split(".")[0]) == "amazon":
             embed_texts = []
             for text in texts:
