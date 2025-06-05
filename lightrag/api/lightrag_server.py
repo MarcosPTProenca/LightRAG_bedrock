@@ -79,7 +79,7 @@ def create_app(args):
     set_verbose_debug(args.verbose)
 
     # Verify that bindings are correctly setup
-    if args.llm_binding not in [
+    if args.llm_binding.strip() not in [
         "lollms",
         "ollama",
         "openai",
@@ -89,7 +89,7 @@ def create_app(args):
     ]:
         raise Exception("llm binding not supported")
 
-    if args.embedding_binding not in ["lollms", "ollama", "openai", "azure_openai", "bedrock"]:
+    if args.embedding_binding.strip() not in ["lollms", "ollama", "openai", "azure_openai", "bedrock"]:
         raise Exception("embedding binding not supported")
 
     # Set default hosts if not provided
