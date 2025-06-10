@@ -1,4 +1,26 @@
 services:
+  postgres:
+      image: shangor/postgres-for-rag
+      container_name: postgres-LightRag
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: lider-aviacao
+        POSTGRES_DB: light_rag_db
+      ports:
+        - "5432:5432"
+      volumes:
+        - ./data/postgres:/var/lib/postgresql/data
+  neo4j:
+    image: neo4j:latest
+    container_name: neo4j-LightRag
+    environment:
+      NEO4J_AUTH: neo4j/lider-aviacao
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./data/neo4j/data:/data
+      - ./data/neo4j/logs:/logs
   lightrag:
     container_name: lightrag
     image: ghcr.io/hkuds/lightrag:latest
