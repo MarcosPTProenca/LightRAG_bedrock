@@ -4,7 +4,7 @@ services:
       container_name: postgres-LightRag
       environment:
         POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: lider-aviacao
+        POSTGRES_PASSWORD: lideraviacao
         POSTGRES_DB: light_rag_db
       ports:
         - "5432:5432"
@@ -14,7 +14,7 @@ services:
     image: neo4j:latest
     container_name: neo4j-LightRag
     environment:
-      NEO4J_AUTH: neo4j/lider-aviacao
+      NEO4J_AUTH: neo4j/lideraviacao
     ports:
       - "7474:7474"
       - "7687:7687"
