@@ -1,6 +1,6 @@
 services:
   postgres:
-      image: shangor/postgres-for-rag
+      image: shangor/postgres-for-rag:v1.0
       container_name: postgres-LightRag
       environment:
         POSTGRES_USER: postgres
