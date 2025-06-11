@@ -11,6 +11,11 @@ services:
     # usa named volume em vez de host bind
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      retries: 5
+      start_period: 5s
 
   neo4j:
     image: neo4j:latest
@@ -23,6 +28,11 @@ services:
     volumes:
       - neo4j-data:/data
       - neo4j-logs:/logs
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p $${NEO4J_AUTH##*/} 'RETURN 1;'"]
+      interval: 5s
+      retries: 5
+      start_period: 10s
   lightrag:
     container_name: lightrag
     image: ghcr.io/hkuds/lightrag:latest
