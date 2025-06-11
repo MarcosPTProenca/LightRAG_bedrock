@@ -5,7 +5,6 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: light_rag_db
     ports:
       - "5432:5432"
     # usa named volume em vez de host bind
