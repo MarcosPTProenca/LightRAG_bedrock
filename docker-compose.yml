@@ -32,7 +32,7 @@ services:
       test: ["CMD-SHELL", "cypher-shell -u neo4j -p $${NEO4J_AUTH##*/} 'RETURN 1;'"]
       interval: 5s
       retries: 5
-      start_period: 10s
+      start_period: 30s
   lightrag:
     container_name: lightrag
     image: ghcr.io/hkuds/lightrag:latest
@@ -42,8 +42,10 @@ services:
       tags:
         - ghcr.io/hkuds/lightrag:latest
     depends_on:
-      - postgres
-      - neo4j
+      postgres:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
     ports:
       - "${PORT:-9621}:9621"
     volumes:
