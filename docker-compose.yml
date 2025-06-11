@@ -1,15 +1,17 @@
 services:
   postgres:
-      image: shangor/postgres-for-rag:v1.0
-      container_name: postgres-LightRag
-      environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: lideraviacao
-        POSTGRES_DB: light_rag_db
-      ports:
-        - "5432:5432"
-      volumes:
-        - ./data/postgres:/var/lib/postgresql/data
+    image: shangor/postgres-for-rag:v1.0
+    container_name: postgres-LightRag
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: lideraviacao
+      POSTGRES_DB: light_rag_db
+    ports:
+      - "5432:5432"
+    # usa named volume em vez de host bind
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
   neo4j:
     image: neo4j:latest
     container_name: neo4j-LightRag
@@ -19,8 +21,8 @@ services:
       - "7474:7474"
       - "7687:7687"
     volumes:
-      - ./data/neo4j/data:/data
-      - ./data/neo4j/logs:/logs
+      - neo4j-data:/data
+      - neo4j-logs:/logs
   lightrag:
     container_name: lightrag
     image: ghcr.io/hkuds/lightrag:latest
@@ -29,6 +31,9 @@ services:
       dockerfile: Dockerfile
       tags:
         - ghcr.io/hkuds/lightrag:latest
+    depends_on:
+      - postgres
+      - neo4j
     ports:
       - "${PORT:-9621}:9621"
     volumes:
@@ -41,3 +46,8 @@ services:
     restart: unless-stopped
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+volumes:
+  postgres-data:
+  neo4j-data:
+  neo4j-logs:
